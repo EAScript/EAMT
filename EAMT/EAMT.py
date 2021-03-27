@@ -1,6 +1,6 @@
 import time
-from EAMT.EnumObjects import *
-from EAMT.using import *
+from EnumObjects import *
+from using import *
 
 __author__    = 'Dr.ehsanakbari.programmer@gmail.com'
 __copyright__ = 'MIT (2021)'
