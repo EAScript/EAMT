@@ -1,7 +1,6 @@
-import clr
 import time
-import datetime
-from EnumObjects import *
+from EAMT.EnumObjects import *
+from EAMT.using import *
 
 __author__    = 'Dr.ehsanakbari.programmer@gmail.com'
 __copyright__ = 'MIT (2021)'
@@ -10,9 +9,11 @@ __version__   = '1.0.0'
 #TODO
 #-----------------------------
 # Test & Debug MT4Client
+# debug On Array Indicators / ObjectGetValueByTime / TextSetFont
 # Crate Pypi Package
 # MT5Client Class
 
+DateTime = Datetime()
 
 class MT4Client:
 
@@ -221,9 +222,9 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def ChartNavigate(self,ChartId,position,shift=0):
+    def ChartNavigate(self,ChartId,ENUM_CHART_POSITION,shift=0):
         try:
-            return self._client.ChartNavigate(ChartId,position,shift)
+            return self._client.ChartNavigate(ChartId,ENUM_CHART_POSITION,shift)
         except Exception as e:
             if self.log: print(e)
 
@@ -303,16 +304,19 @@ class MT4Client:
 
     def ChartTimeOnDropped(self):
         try:
-            return self._client.ChartTimeOnDropped()
+            time = self._client.ChartTimeOnDropped()
+            out = datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second)
+            return out
         except Exception as e:
             if self.log: print(e)
 
     def ChartTimePriceToXY(self,ChartId,subWindow,Time,price):
         try:
-            x = 0
-            y = 0
-            self._client.ChartTimePriceToXY(ChartId,subWindow,Time,price,x,y)
-            return x,y
+            _x = 0
+            _y = 0
+            settime = DateTime.datetime(Time.year,Time.month,Time.day,Time.hour,Time.minute,Time.second)
+            XY = self._client.ChartTimePriceToXY(ChartId,subWindow,settime,price,_x,_y)
+            return XY
         except Exception as e:
             if self.log: print(e)
 
@@ -328,13 +332,20 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
+    def ChartXOnDropped(self):
+        try:
+            return self._client.ChartXOnDropped()
+        except Exception as e:
+            if self.log: print(e)
+
     def ChartXYToTimePrice(self,ChartId,x,y):
         try:
             subWindow = 0
-            time = datetime.datetime(1990,1,1,0,0,0)
+            time = DateTime.datetime(1970,1,1)
             price = 0.0
-            self._client.ChartXYToTimePrice(ChartId,x,y,subWindow,time,price)
-            return subWindow,time,price
+            out = self._client.ChartXYToTimePrice(ChartId,x,y,subWindow,time,price)
+            time = datetime.datetime(out[2].Year,out[2].Month,out[2].Day,out[2].Hour,out[2].Minute,out[2].Second)
+            return (out[0],out[1],time,out[3])
         except Exception as e:
             if self.log: print(e)
 
@@ -353,20 +364,30 @@ class MT4Client:
             return False
 
     def CopyRates(self,symbolName,ENUM_TIMEFRAMES,startPos,count):
-        try:
-            return self._client.ChartPriceOnDropped(symbolName,ENUM_TIMEFRAMES,startPos,count)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def CopyRates(self,symbolName,ENUM_TIMEFRAMES,startTime,count):
-        try:
-            return self._client.ChartPriceOnDropped(symbolName,ENUM_TIMEFRAMES,startTime,count)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def CopyRates(self,symbolName,ENUM_TIMEFRAMES,startTime,stopTime):
         try:
-            return self._client.ChartPriceOnDropped(symbolName,ENUM_TIMEFRAMES,startTime,stopTime)
+            if type(startTime) == int and type(stopTime) == int:
+                Rates = self._client.CopyRates(symbolName,ENUM_TIMEFRAMES,startTime,stopTime)
+                out = MqlRates(Rates)
+                return out
+            elif type(startTime) == datetime.datetime and type(stopTime) == int:
+                _starttime = DateTime.datetime(startTime.year,startTime.month,startTime.day,startTime.hour,startTime.minute,startTime.second)
+                Rates = self._client.CopyRates(symbolName,ENUM_TIMEFRAMES,_starttime,stopTime)
+                out = MqlRates(Rates)
+                return out
+            elif type(startTime) == datetime.datetime and type(stopTime) == datetime.datetime:
+                _starttime = DateTime.datetime(startTime.year,startTime.month,startTime.day,startTime.hour,startTime.minute,startTime.second)
+                _stoptime = DateTime.datetime(stopTime.year,stopTime.month,stopTime.day,stopTime.hour,stopTime.minute,stopTime.second)
+                Rates = self._client.CopyRates(symbolName,ENUM_TIMEFRAMES,_starttime,_stoptime)
+                out = MqlRates(Rates)
+                return out
+            else:
+                return False
         except Exception as e:
             if self.log: print(e)
 
@@ -402,19 +423,23 @@ class MT4Client:
 
     def GetOrder(self,index,OrderSelectMode,OrderSelectSource):
         try:
-            return self._client.GetOrder(index,OrderSelectMode,OrderSelectSource)
+            order = self._client.GetOrder(index,OrderSelectMode,OrderSelectSource)
+            return MtOrder(order)
         except Exception as e:
             if self.log: print(e)
+            return False
 
     def GetOrders(self,OrderSelectSource):
         try:
-            return self._client.GetOrders(OrderSelectSource)
+            orders = self._client.GetOrders(OrderSelectSource)
+            return MtOrders(orders)
         except Exception as e:
             if self.log: print(e)
 
     def GetQuotes(self):
         try:
-            return self._client.GetQuotes()
+            quotes = self._client.GetQuotes()
+            return MtQuote(quotes)
         except Exception as e:
             if self.log: print(e)
 
@@ -456,7 +481,9 @@ class MT4Client:
 
     def GlobalVariableSet(self,name,value):
         try:
-            return self._client.GlobalVariableSet(name,value)
+            time = self._client.GlobalVariableSet(name,value)
+            _time = datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second)
+            return _time
         except Exception as e:
             if self.log: print(e)
 
@@ -520,11 +547,11 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def iBandsOnArray(self,array,total,period,deviation,bandsShift,mode,shift):
-        try:
-            return self._client.iBandsOnArray(array,total,period,deviation,bandsShift,mode,shift)
-        except Exception as e:
-            if self.log: print(e)
+#    def iBandsOnArray(self,array,total,period,deviation,bandsShift,mode,shift):
+#        try:
+#            return self._client.iBandsOnArray(array,total,period,deviation,bandsShift,mode,shift)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def iBars(self,symbol,ChartPeriod):
         try:
@@ -534,7 +561,8 @@ class MT4Client:
 
     def iBarShift(self,symbol,ChartPeriod,time,exact):
         try:
-            return self._client.iBarShift(symbol,ChartPeriod,time,exact)
+            _time = DateTime.datetime(time.year,time.month,time.day,time.hour,time.minute,time.second)
+            return self._client.iBarShift(symbol,ChartPeriod,_time,exact)
         except Exception as e:
             if self.log: print(e)
 
@@ -562,11 +590,11 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def iCCIOnArray(self,array,total,period,shift):
-        try:
-            return self._client.iCCIOnArray(array,total,period,shift)
-        except Exception as e:
-            if self.log: print(e)
+#    def iCCIOnArray(self,array,total,period,shift):
+#        try:
+#            return self._client.iCCIOnArray(array,total,period,shift)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def iClose(self,symbol,ChartPeriod,shift):
         try:
@@ -581,14 +609,14 @@ class MT4Client:
             if self.log: print(e)
 
     def iCustom(self,symbol,timeframe,name,mode,shift):
-        try:
-            return self._client.iCustom(symbol,timeframe,name,mode,shift)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def iCustom(self,symbol,timeframe,name,parameters,mode,shift):
+    def iCustom(self,symbol,timeframe,name,parameters=None,mode=0,shift=0):
         try:
-            return self._client.iCustom(symbol,timeframe,name,parameters,mode,shift)
+            if parameters == None:
+                return self._client.iCustom(symbol,timeframe,name,mode,shift)
+            else:
+                return self._client.iCustom(symbol,timeframe,name,parameters,mode,shift)
         except Exception as e:
             if self.log: print(e)
 
@@ -604,11 +632,11 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def iEnvelopesOnArray(self,array,total,maPeriod,maMethod,maShift,deviation,mode,shift):
-        try:
-            return self._client.iEnvelopesOnArray(array,total,maPeriod,maMethod,maShift,deviation,mode,shift)
-        except Exception as e:
-            if self.log: print(e)
+#    def iEnvelopesOnArray(self,array,total,maPeriod,maMethod,maShift,deviation,mode,shift):
+#        try:
+#            return self._client.iEnvelopesOnArray(array,total,maPeriod,maMethod,maShift,deviation,mode,shift)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def iForce(self,symbol,timeframe,period,maMethod,appliedPrice,shift):
         try:
@@ -682,11 +710,11 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def iMAOnArray(self,array,total,period,maShift,maMethod,shift):
-        try:
-            return self._client.iMAOnArray(array,total,period,maShift,maMethod,shift)
-        except Exception as e:
-            if self.log: print(e)
+#    def iMAOnArray(self,array,total,period,maShift,maMethod,shift):
+#        try:
+#            return self._client.iMAOnArray(array,total,period,maShift,maMethod,shift)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def iMFI(self,symbol,timeframe,period,shift):
         try:
@@ -700,11 +728,11 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def iMomentumOnArray(self,array,total,period,shift):
-        try:
-            return self._client.iMomentumOnArray(array,total,period,shift)
-        except Exception as e:
-            if self.log: print(e)
+#    def iMomentumOnArray(self,array,total,period,shift):
+#        try:
+#            return self._client.iMomentumOnArray(array,total,period,shift)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def iOBV(self,symbol,timeframe,appliedPrice,shift):
         try:
@@ -736,11 +764,11 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def iRSIOnArray(self,array,total,period,shift):
-        try:
-            return self._client.iRSIOnArray(array,total,period,shift)
-        except Exception as e:
-            if self.log: print(e)
+#    def iRSIOnArray(self,array,total,period,shift):
+#        try:
+#            return self._client.iRSIOnArray(array,total,period,shift)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def iRVI(self,symbol,timeframe,period,mode,shift):
         try:
@@ -802,11 +830,11 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def iStdDevOnArray(self,array,total,maPeriod,maShift,maMethod,shift):
-        try:
-            return self._client.iStdDevOnArray(array,total,maPeriod,maShift,maMethod,shift)
-        except Exception as e:
-            if self.log: print(e)
+#    def iStdDevOnArray(self,array,total,maPeriod,maShift,maMethod,shift):
+#        try:
+#            return self._client.iStdDevOnArray(array,total,maPeriod,maShift,maMethod,shift)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def IsTesting(self):
         try:
@@ -840,13 +868,19 @@ class MT4Client:
 
     def iTime(self,symbol,ChartPeriod,shift):
         try:
-            return self._client.iTime(symbol,ChartPeriod,shift)
+            time = self._client.iTime(symbol,ChartPeriod,shift)
+            out = datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second)
+            return out
         except Exception as e:
             if self.log: print(e)
 
     def iTimeArray(self,symbol,ChartPeriod):
         try:
-            return self._client.iTimeArray(symbol,ChartPeriod)
+            times = self._client.iTimeArray(symbol,ChartPeriod)
+            array = []
+            for time in times:
+                array.append(datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second))
+            return array
         except Exception as e:
             if self.log: print(e)
 
@@ -875,20 +909,19 @@ class MT4Client:
             if self.log: print(e)
 
     def MessageBox(self,text):
-        try:
-            return self._client.MessageBox(text)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def MessageBox(self,text,caption):
-        try:
-            return self._client.MessageBox(text,caption)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def MessageBox(self,text,caption,flag):
+    def MessageBox(self,text,caption=None,flag=None):
         try:
-            return self._client.MessageBox(text,caption,flag)
+            if caption == None and flag == None:
+                return self._client.MessageBox(text)
+            elif flag == None:
+                return self._client.MessageBox(text,caption)
+            else:
+                return self._client.MessageBox(text,caption,flag)
         except Exception as e:
             if self.log: print(e)
 
@@ -906,7 +939,18 @@ class MT4Client:
 
     def ObjectCreate(self,ChartId,objectName,EnumObject,subWindow,time1,price1,time2 = None,price2 = None,time3 = None,price3 = None):
         try:
-            return self._client.ObjectCreate(ChartId,objectName,EnumObject,subWindow,time1,price1,time2,price2,time3,price3)
+            if time2 == None and time3 == None:
+                _time1 = DateTime.datetime(time1.year,time1.month,time1.day,time1.hour,time1.minute,time1.second)
+                return self._client.ObjectCreate(ChartId,objectName,EnumObject,subWindow,_time1,price1,time2,price2,time3,price3)
+            elif time3 == None:
+                _time1 = DateTime.datetime(time1.year,time1.month,time1.day,time1.hour,time1.minute,time1.second)
+                _time2 = DateTime.datetime(time2.year,time2.month,time2.day,time2.hour,time2.minute,time2.second)
+                return self._client.ObjectCreate(ChartId,objectName,EnumObject,subWindow,_time1,price1,_time2,price2,time3,price3)
+            else:
+                _time1 = DateTime.datetime(time1.year,time1.month,time1.day,time1.hour,time1.minute,time1.second)
+                _time2 = DateTime.datetime(time2.year,time2.month,time2.day,time2.hour,time2.minute,time2.second)
+                _time3 = DateTime.datetime(time3.year,time3.month,time3.day,time3.hour,time3.minute,time3.second)
+                return self._client.ObjectCreate(ChartId,objectName,EnumObject,subWindow,_time1,price1,_time2,price2,_time3,price3)
         except Exception as e:
             if self.log: print(e)
 
@@ -960,7 +1004,9 @@ class MT4Client:
 
     def ObjectGetTimeByValue(self,ChartId,objectName,value,lineId = 0):
         try:
-            return self._client.ObjectGetTimeByValue(ChartId,objectName,value,lineId)
+            time = self._client.ObjectGetTimeByValue(ChartId,objectName,value,lineId)
+            out = datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second)
+            return out
         except Exception as e:
             if self.log: print(e)
 
@@ -970,15 +1016,17 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def ObjectGetValueByTime(self,ChartId,objectName,time,lineId = 0):
-        try:
-            return self._client.ObjectGetValueByTime(ChartId,objectName,time,lineId)
-        except Exception as e:
-            if self.log: print(e)
+#    def ObjectGetValueByTime(self,ChartId,objectName,time,lineId = 0):
+#        try:
+#            settime = DateTime.datetime(time.year,time.month,time.day,time.hour,time.minute,time.second)
+#            return self._client.ObjectGetValueByTime(ChartId,objectName,settime,lineId)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def ObjectMove(self,ChartId,objectName,pointIndex,time,price):
         try:
-            return self._client.ObjectMove(ChartId,objectName,pointIndex,time,price)
+            _time = DateTime.datetime(time.year,time.month,time.day,time.hour,time.minute,time.second)
+            return self._client.ObjectMove(ChartId,objectName,pointIndex,_time,price)
         except Exception as e:
             if self.log: print(e)
 
@@ -1001,14 +1049,14 @@ class MT4Client:
             if self.log: print(e)
 
     def ObjectSetDouble(self,ChartId,objectName,EnumObjectPropertyDouble,propValue):
-        try:
-            return self._client.ObjectSetDouble(ChartId,objectName,EnumObjectPropertyDouble,propValue)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def ObjectSetDouble(self,ChartId,objectName,EnumObjectPropertyDouble,propModifier,propValue):
+    def ObjectSetDouble(self,ChartId,objectName,EnumObjectPropertyDouble,propValue,propModifier=None):
         try:
-            return self._client.ObjectSetDouble(ChartId,objectName,EnumObjectPropertyDouble,propModifier,propValue)
+            if propModifier == None:
+                return self._client.ObjectSetDouble(ChartId, objectName, EnumObjectPropertyDouble, propValue)
+            else:
+                return self._client.ObjectSetDouble(ChartId,objectName,EnumObjectPropertyDouble,propModifier,propValue)
         except Exception as e:
             if self.log: print(e)
 
@@ -1019,32 +1067,43 @@ class MT4Client:
             if self.log: print(e)
 
     def ObjectSetInteger(self,ChartId,objectName,EnumObjectPropertyInteger,propValue):
-        try:
-            return self._client.ObjectSetInteger(ChartId,objectName,EnumObjectPropertyInteger,propValue)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def ObjectSetInteger(self,ChartId,objectName,EnumObjectPropertyInteger,propModifier,propValue):
+    def ObjectSetInteger(self,ChartId,objectName,EnumObjectPropertyInteger,propValue,propModifier=None):
         try:
-            return self._client.ObjectSetInteger(ChartId,objectName,EnumObjectPropertyInteger,propModifier,propValue)
+            if propModifier == None:
+                return self._client.ObjectSetInteger(ChartId, objectName, EnumObjectPropertyInteger, propValue)
+            else:
+                return self._client.ObjectSetInteger(ChartId,objectName,EnumObjectPropertyInteger,propModifier,propValue)
         except Exception as e:
             if self.log: print(e)
 
     def ObjectSetString(self,ChartId,objectName,EnumObjectPropertyString,propValue):
+        pass
+
+    def ObjectSetString(self,ChartId,objectName,EnumObjectPropertyString,propValue,propModifier=None):
         try:
-            return self._client.ObjectSetString(ChartId,objectName,EnumObjectPropertyString,propValue)
+            if propModifier == None:
+                return self._client.ObjectSetString(ChartId, objectName, EnumObjectPropertyString, propValue)
+            else:
+                return self._client.ObjectSetString(ChartId,objectName,EnumObjectPropertyString,propModifier,propValue)
         except Exception as e:
             if self.log: print(e)
 
-    def ObjectSetString(self,ChartId,objectName,EnumObjectPropertyString,propModifier,propValue):
-        try:
-            return self._client.ObjectSetString(ChartId,objectName,EnumObjectPropertyString,propModifier,propValue)
-        except Exception as e:
-            if self.log: print(e)
+    def ObjectSetText(self,objectName,text,fontSize):
+        pass
 
-    def ObjectSetText(self,objectName,text,fontSize = 0,fontName = None,textColor = None):
+    def ObjectSetText(self,objectName,text,fontSize,fontName):
+        pass
+
+    def ObjectSetText(self,objectName,text,fontSize = 12,fontName = None,textColor = None):
         try:
-            return self._client.ObjectSetText(objectName,text,fontSize,fontName,textColor)
+            if fontName == None and textColor == None:
+                return self._client.ObjectSetText(objectName,text,fontSize,"Arial")
+            elif textColor == None:
+                return self._client.ObjectSetText(objectName,text,fontSize,fontName)
+            else:
+                return self._client.ObjectSetText(objectName,text,fontSize,fontName,textColor)
         except Exception as e:
             if self.log: print(e)
 
@@ -1061,26 +1120,24 @@ class MT4Client:
             if self.log: print(e)
 
     def OrderClose(self,ticket,slippage):
-        try:
-            return self._client.OrderClose(ticket,slippage)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderClose(self,ticket,lots,slippage):
-        try:
-            return self._client.OrderClose(ticket,lots,slippage)
-        except Exception as e:
-            if self.log: print(e)
+    def OrderClose(self,ticket,slippage,lots):
+        pass
 
-    def OrderClose(self,ticket,lots,price,slippage):
-        try:
-            return self._client.OrderClose(ticket,lots,price,slippage)
-        except Exception as e:
-            if self.log: print(e)
+    def OrderClose(self,ticket,slippage,lots,price):
+        pass
 
-    def OrderClose(self,ticket,lots,price,slippage,color):
+    def OrderClose(self,ticket,slippage,lots=None,price=None,color=None):
         try:
-            return self._client.OrderClose(ticket,lots,price,slippage,color)
+            if lots == None and price == None and color == None:
+                return self._client.OrderClose(ticket,slippage)
+            elif price == None and color == None:
+                return self._client.OrderClose(ticket,lots,slippage)
+            elif color == None:
+                return self._client.OrderClose(ticket,lots,price,slippage)
+            else:
+                return self._client.OrderClose(ticket,lots,price,slippage,color)
         except Exception as e:
             if self.log: print(e)
 
@@ -1090,17 +1147,17 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def OrderCloseBy(self,ticket,opposite):
-        try:
-            return self._client.OrderCloseBy(ticket,opposite)
-        except Exception as e:
-            if self.log: print(e)
-
-    def OrderCloseBy(self,ticket,opposite,color):
-        try:
-            return self._client.OrderCloseBy(ticket,opposite,color)
-        except Exception as e:
-            if self.log: print(e)
+#    def OrderCloseBy(self,ticket,opposite):
+#        pass
+#
+#    def OrderCloseBy(self,ticket,opposite,color=None):
+#        try:
+#            if color == None:
+#                return self._client.OrderCloseBy(ticket,opposite)
+#            else:
+#                return self._client.OrderCloseBy(ticket,opposite,color)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def OrderCloseByCurrentPrice(self,ticket,slippage):
         try:
@@ -1109,20 +1166,22 @@ class MT4Client:
             if self.log: print(e)
 
     def OrderClosePrice(self):
-        try:
-            return self._client.OrderClosePrice()
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderClosePrice(self,ticket):
+    def OrderClosePrice(self,ticket=None):
         try:
-            return self._client.OrderClosePrice(ticket)
+            if ticket == None:
+                return self._client.OrderClosePrice()
+            else:
+                return self._client.OrderClosePrice(ticket)
         except Exception as e:
             if self.log: print(e)
 
     def OrderCloseTime(self):
         try:
-            return self._client.OrderCloseTime()
+            time = self._client.OrderCloseTime()
+            out = datetime.datetime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second)
+            return out
         except Exception as e:
             if self.log: print(e)
 
@@ -1139,20 +1198,22 @@ class MT4Client:
             if self.log: print(e)
 
     def OrderDelete(self,ticket):
-        try:
-            return self._client.OrderDelete(ticket)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderDelete(self,ticket,color):
+    def OrderDelete(self,ticket,color=None):
         try:
-            return self._client.OrderDelete(ticket,color)
+            if color == None:
+                return self._client.OrderDelete(ticket)
+            else:
+                return self._client.OrderDelete(ticket,color)
         except Exception as e:
             if self.log: print(e)
 
     def OrderExpiration(self):
         try:
-            return self._client.OrderExpiration()
+            time = self._client.OrderExpiration()
+            out = datetime.datetime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second)
+            return out
         except Exception as e:
             if self.log: print(e)
 
@@ -1168,33 +1229,43 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def OrderModify(self,ticket,price,stoploss,takeprofit,expiration):
-        try:
-            return self._client.OrderModify(ticket,price,stoploss,takeprofit,expiration)
-        except Exception as e:
-            if self.log: print(e)
+    def OrderModify(self,ticket,price,stoploss,takeprofit):
+        pass
 
-    def OrderModify(self,ticket,price,stoploss,takeprofit,expiration,arrowColor):
+    def OrderModify(self,ticket,price,stoploss,takeprofit,expiration):
+        pass
+
+    def OrderModify(self,ticket,price,stoploss,takeprofit,expiration=None,arrowColor=None):
         try:
-            return self._client.OrderModify(ticket,price,stoploss,takeprofit,expiration,arrowColor)
+            if expiration == None and arrowColor == None:
+                time = DateTime.datetime(1970,1,1)
+                return self._client.OrderModify(ticket,price,stoploss,takeprofit,time)
+            if arrowColor == None:
+                time = DateTime.datetime(expiration.year,expiration.month,expiration.day,expiration.hour,expiration.minute,expiration.second)
+                return self._client.OrderModify(ticket,price,stoploss,takeprofit,time)
+            else:
+                time = DateTime.datetime(expiration.year,expiration.month,expiration.day,expiration.hour,expiration.minute,expiration.second)
+                return self._client.OrderModify(ticket,price,stoploss,takeprofit,time,arrowColor)
         except Exception as e:
             if self.log: print(e)
 
     def OrderOpenPrice(self):
-        try:
-            return self._client.OrderOpenPrice()
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderOpenPrice(self,ticket):
+    def OrderOpenPrice(self,ticket=None):
         try:
-            return self._client.OrderOpenPrice(ticket)
+            if ticket == None:
+                return self._client.OrderOpenPrice()
+            else:
+                return self._client.OrderOpenPrice(ticket)
         except Exception as e:
             if self.log: print(e)
 
     def OrderOpenTime(self):
         try:
-            return self._client.OrderOpenTime()
+            time = self._client.OrderOpenTime()
+            out = datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second)
+            return out
         except Exception as e:
             if self.log: print(e)
 
@@ -1213,80 +1284,77 @@ class MT4Client:
             if self.log: print(e)
 
     def OrderSelect(self,index,OrderSelectMode):
-        try:
-            return self._client.OrderSelect(index,OrderSelectMode)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderSelect(self,index,OrderSelectMode,OrderSelectSource):
+    def OrderSelect(self,index,OrderSelectMode,OrderSelectSource=None):
         try:
-            return self._client.OrderSelect(index,OrderSelectMode,OrderSelectSource)
+            if OrderSelectSource == None:
+                return self._client.OrderSelect(index,OrderSelectMode)
+            else:
+                return self._client.OrderSelect(index,OrderSelectMode,OrderSelectSource)
         except Exception as e:
             if self.log: print(e)
 
     def OrderSend(self,symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit):
-        try:
-            return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def OrderSend(self,symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment):
-        try:
-            return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def OrderSend(self,symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic):
-        try:
-            return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def OrderSend(self,symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic,expiration):
-        try:
-            return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic,expiration)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderSend(self,symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic,expiration,arrowColor):
+    def OrderSend(self,symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment=None,magic=None,expiration=None,arrowColor=None):
         try:
-            return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic,expiration,arrowColor)
+            if comment == None and magic == None and expiration == None and arrowColor == None:
+                return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit)
+            elif magic == None and expiration == None and arrowColor == None:
+                return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment)
+            elif expiration == None and arrowColor == None:
+                return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic)
+            elif arrowColor == None:
+                time = DateTime.datetime(expiration.year,expiration.month,expiration.day,expiration.hour,expiration.minute,expiration.second)
+                return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic,time)
+            else:
+                time = DateTime.datetime(expiration.year,expiration.month,expiration.day,expiration.hour,expiration.minute,expiration.second)
+                return self._client.OrderSend(symbol,TradeOperation,volume,price,slippage,stoploss,takeprofit,comment,magic,time,arrowColor)
         except Exception as e:
             if self.log: print(e)
 
     def OrderSendBuy(self,symbol,volume,slippage):
-        try:
-            return self._client.OrderSendBuy(symbol,volume,slippage)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def OrderSendBuy(self,symbol,volume,slippage,stoploss,takeprofit):
-        try:
-            return self._client.OrderSendBuy(symbol,volume,slippage,stoploss,takeprofit)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderSendBuy(self,symbol,volume,slippage,stoploss,takeprofit,comment,magic):
+    def OrderSendBuy(self,symbol,volume,slippage,stoploss=None,takeprofit=None,comment=None,magic=None):
         try:
-            return self._client.OrderSendBuy(symbol,volume,slippage,stoploss,takeprofit,comment,magic)
+            if stoploss == None and takeprofit == None and comment == None and magic == None:
+                return self._client.OrderSendBuy(symbol,volume,slippage)
+            elif comment == None and magic == None:
+                return self._client.OrderSendBuy(symbol,volume,slippage,stoploss,takeprofit)
+            else:
+                return self._client.OrderSendBuy(symbol,volume,slippage,stoploss,takeprofit,comment,magic)
         except Exception as e:
             if self.log: print(e)
 
     def OrderSendSell(self,symbol,volume,slippage):
-        try:
-            return self._client.OrderSendSell(symbol,volume,slippage)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
     def OrderSendSell(self,symbol,volume,slippage,stoploss,takeprofit):
-        try:
-            return self._client.OrderSendSell(symbol,volume,slippage,stoploss,takeprofit)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def OrderSendSell(self,symbol,volume,slippage,stoploss,takeprofit,comment,magic):
+    def OrderSendSell(self,symbol,volume,slippage,stoploss=None,takeprofit=None,comment=None,magic=None):
         try:
-            return self._client.OrderSendSell(symbol,volume,slippage,stoploss,takeprofit,comment,magic)
+            if stoploss == None and takeprofit == None and comment == None and magic == None:
+                return self._client.OrderSendSell(symbol,volume,slippage)
+            elif comment == None and magic == None:
+                return self._client.OrderSendSell(symbol,volume,slippage,stoploss,takeprofit)
+            else:
+                return self._client.OrderSendSell(symbol,volume,slippage,stoploss,takeprofit,comment,magic)
         except Exception as e:
             if self.log: print(e)
 
@@ -1346,9 +1414,11 @@ class MT4Client:
 
     def Print(self,message):
         try:
-            return self._client.Print(message)
+            self._client.Print(message)
+            return True
         except Exception as e:
             if self.log: print(e)
+            return False
 
     def RefreshRates(self):
         try:
@@ -1365,14 +1435,14 @@ class MT4Client:
             if self.log: print(e)
 
     def SendFTP(self,filename):
-        try:
-            return self._client.SendFTP(filename)
-        except Exception as e:
-            if self.log: print(e)
+        pass
 
-    def SendFTP(self,filename,ftpPath):
+    def SendFTP(self,filename,ftpPath=None):
         try:
-            return self._client.SendFTP(filename,ftpPath)
+            if ftpPath == None:
+                return self._client.SendFTP(filename)
+            else:
+                return self._client.SendFTP(filename,ftpPath)
         except Exception as e:
             if self.log: print(e)
 
@@ -1391,8 +1461,10 @@ class MT4Client:
     def Sleep(self,milliseconds):
         try:
             self._client.Sleep(milliseconds)
+            return True
         except Exception as e:
             if self.log: print(e)
+            return False
 
     def SymbolInfoDouble(self,symbolName,EnumSymbolInfoDouble):
         try:
@@ -1408,7 +1480,8 @@ class MT4Client:
 
     def SymbolInfoSession(self,symbol,DayOfWeek,index,SessionType):
         try:
-            return self._client.SymbolInfoSession(symbol,DayOfWeek,index,SessionType)
+            Session = self._client.SymbolInfoSession(symbol,DayOfWeek,index,SessionType)
+            return MtSession(Session)
         except Exception as e:
             if self.log: print(e)
 
@@ -1420,7 +1493,8 @@ class MT4Client:
 
     def SymbolInfoTick(self,symbol):
         try:
-            return self._client.SymbolInfoTick(symbol)
+            Tick = self._client.SymbolInfoTick(symbol)
+            return MqlTick(Tick)
         except Exception as e:
             if self.log: print(e)
 
@@ -1478,75 +1552,92 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def TextSetFont(self,name,size,flagfontstyle = FlagFontStyle.FW_DONTCARE,orientation = 0):
-        try:
-            return self._client.TextSetFont(name,size,flagfontstyle,orientation)
-        except Exception as e:
-            if self.log: print(e)
+#    def TextSetFont(self,name,size,flagfontstyle = FlagFontStyle.FW_DONTCARE,orientation = 0):
+#        try:
+#            return self._client.TextSetFont(name,size,flagfontstyle,orientation)
+#        except Exception as e:
+#            if self.log: print(e)
 
     def TimeCurrent(self):
         try:
-            return self._client.TimeCurrent()
+            time = self._client.TimeCurrent()
+            return datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second)
         except Exception as e:
             if self.log: print(e)
 
     def TimeDay(self,date):
         try:
-            return self._client.TimeDay(date)
+            time = DateTime.datetime(date.year,date.month,date.day,date.hour,date.minute,date.second)
+            return self._client.TimeDay(time)
         except Exception as e:
             if self.log: print(e)
 
     def TimeDayOfWeek(self,date):
         try:
-            return self._client.TimeDayOfWeek(date)
+            time = DateTime.datetime(date.year, date.month, date.day, date.hour, date.minute, date.second)
+            return self._client.TimeDayOfWeek(time)
         except Exception as e:
             if self.log: print(e)
 
     def TimeDayOfYear(self,date):
         try:
-            return self._client.TimeDayOfYear(date)
+            time = DateTime.datetime(date.year, date.month, date.day, date.hour, date.minute, date.second)
+            return self._client.TimeDayOfYear(time)
         except Exception as e:
             if self.log: print(e)
 
     def TimeGMT(self):
         try:
-            return self._client.TimeGMT()
+            time = self._client.TimeGMT()
+            return datetime.datetime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second)
         except Exception as e:
             if self.log: print(e)
 
     def TimeHour(self,time):
         try:
-            return self._client.TimeHour(time)
+            _time = DateTime.datetime(time.year, time.month, time.day, time.hour, time.minute, time.second)
+            return self._client.TimeHour(_time)
         except Exception as e:
             if self.log: print(e)
 
     def TimeLocal(self):
         try:
-            return self._client.TimeLocal()
+            time = self._client.TimeLocal()
+            return datetime.datetime(time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second)
         except Exception as e:
             if self.log: print(e)
 
     def TimeMinute(self,time):
         try:
-            return self._client.TimeMinute(time)
+            _time = DateTime.datetime(time.year, time.month, time.day, time.hour, time.minute, time.second)
+            return self._client.TimeMinute(_time)
         except Exception as e:
             if self.log: print(e)
 
     def TimeMonth(self,time):
         try:
-            return self._client.TimeMonth(time)
+            _time = DateTime.datetime(time.year, time.month, time.day, time.hour, time.minute, time.second)
+            return self._client.TimeMonth(_time)
         except Exception as e:
             if self.log: print(e)
 
     def TimeSeconds(self,time):
         try:
-            return self._client.TimeSeconds(time)
+            _time = DateTime.datetime(time.year, time.month, time.day, time.hour, time.minute, time.second)
+            return self._client.TimeSeconds(_time)
         except Exception as e:
             if self.log: print(e)
 
     def TimeYear(self,time):
         try:
-            return self._client.TimeYear(time)
+            _time = DateTime.datetime(time.year, time.month, time.day, time.hour, time.minute, time.second)
+            return self._client.TimeYear(_time)
+        except Exception as e:
+            if self.log: print(e)
+
+    def UninitializeReason(self):
+        try:
+            return self._client.UninitializeReason()
         except Exception as e:
             if self.log: print(e)
 
@@ -1640,7 +1731,8 @@ class MT4Client:
 
     def WindowTimeOnDropped(self):
         try:
-            return self._client.WindowTimeOnDropped()
+            time = self._client.WindowTimeOnDropped()
+            return datetime.datetime(time.Year,time.Month,time.Day,time.Hour,time.Minute,time.Second)
         except Exception as e:
             if self.log: print(e)
 
@@ -1656,9 +1748,10 @@ class MT4Client:
         except Exception as e:
             if self.log: print(e)
 
-    def Year(self,time):
+    def Year(self):
         try:
-            return self._client.Year(time)
+            _time = DateTime.datetime(1990,1,1,0,0,0)
+            return self._client.Year(_time)
         except Exception as e:
             if self.log: print(e)
 

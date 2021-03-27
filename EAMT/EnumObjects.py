@@ -1,3 +1,7 @@
+__author__    = 'Dr.ehsanakbari.programmer@gmail.com'
+__copyright__ = 'MIT (2021)'
+__version__   = '1.0.0'
+
 class TradeOperation:
     OP_BUY = 0
     OP_SELL = 1
@@ -398,3 +402,8 @@ class FlagFontStyle:
     FW_BLACK = 14
     FONT_STRIKEOUT = 536870912
     FONT_UNDERLINE = 1073741824
+
+class ENUM_CHART_POSITION:
+    CHART_BEGIN = 0
+    CHART_CURRENT_POS = 1
+    CHART_END = 2
