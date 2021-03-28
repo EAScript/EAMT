@@ -8,7 +8,7 @@
 This library currently only supports MetaTrader 4
 
 ## Installation
-- Install the library with the `pip install EAMT` command
+- Install the library with the `pip install EAMetatrader` command
 - Copy and run the `MtApi.ex4` file in MetaTrader software
 - Set up a `port` in Expert and Application for network connection
 - and over
