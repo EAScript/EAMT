@@ -1,6 +1,6 @@
 import time
-from EAMT.EnumObjects import *
-from EAMT.using import *
+from ..Enums.EnumObjects import *
+from ..Using.using import *
 
 __author__    = 'Dr.ehsanakbari.programmer@gmail.com'
 __copyright__ = 'MIT (2021)'
@@ -18,7 +18,7 @@ DateTime = Datetime()
 class MT4Client:
 
     def __init__(self,LOG=False):
-        #sys.path.append(path)
+        sys.path.append(r"EAMetatrader\Client")
         clr.AddReference('MtApi')
         import MtApi as mt
         self._client = mt.MtApiClient()

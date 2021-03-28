@@ -1,3 +1,4 @@
+import sys
 import clr
 import datetime
 
@@ -7,6 +8,7 @@ __version__   = '1.0.0'
 
 class Datetime:
     def __init__(self):
+        sys.path.append(r"EAMetatrader\Using")
         clr.AddReference("WindowsBase")
         from System import DateTime
         self._DateTime = DateTime
@@ -262,6 +264,7 @@ class MqlRates:
 class Color:
 
     def __init__(self):
+        sys.path.append(r"EAMetatrader\Using")
         clr.AddReference("System.Drawing")
         from System.Drawing import Color
         self._Color = Color

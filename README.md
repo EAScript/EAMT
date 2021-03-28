@@ -15,7 +15,7 @@ This library currently only supports MetaTrader 4
  
 ### Required libraries
 ```Python
-from EAMT import MT4Client
+from EAMetatrader import MT4Client
 from EnumObjects import *
 from using import Color
 import datetime
@@ -54,7 +54,7 @@ Price = 1.18
 SL = 1.17800
 TP = 1.18400
 Slippage = 5
-Comment = "EAMT"
+Comment = "EAMetatrader"
 Magic = 2222
 Expiration = datetime.datetime(2021,3,25)
 
