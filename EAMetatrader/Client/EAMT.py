@@ -1,3 +1,4 @@
+import os
 import time
 from ..Enums import *
 from ..Using import *
@@ -18,8 +19,8 @@ DateTime = Datetime()
 class MT4Client:
 
     def __init__(self,LOG=False):
-        sys.path.append(r"EAMetatrader\Client")
-        clr.AddReference('MtApi')
+        #sys.path.append(r"EAMetatrader\Client")
+        clr.AddReference(os.path.dirname(os.path.abspath(__file__))+"\MtApi")
         import MtApi as mt
         self._client = mt.MtApiClient()
         self.log = LOG
