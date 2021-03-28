@@ -1,6 +1,6 @@
 import time
-from ..Enums.EnumObjects import *
-from ..Using.using import *
+from ..Enums import *
+from ..Using import *
 
 __author__    = 'Dr.ehsanakbari.programmer@gmail.com'
 __copyright__ = 'MIT (2021)'
