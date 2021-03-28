@@ -57,8 +57,9 @@ Slippage = 5
 Comment = "EAMetatrader"
 Magic = 2222
 Expiration = datetime.datetime(2021,3,25)
+color = Color()
 
-Order = client.OrderSend("EURUSD",TradeOperation.OP_BUY,Lot,Price,Slippage,SL,TP,Comment,Magic,Expiration,Color.Green())
+Order = client.OrderSend("EURUSD",TradeOperation.OP_BUY,Lot,Price,Slippage,SL,TP,Comment,Magic,Expiration,color.Green())
 ```
 
 ## TODO
