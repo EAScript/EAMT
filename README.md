@@ -1,5 +1,5 @@
 # EAMT
-![PyPI](https://img.shields.io/pypi/v/EAMT)![PyPI - Downloads](https://img.shields.io/pypi/dm/EAMT) \
+![PyPI](https://img.shields.io/pypi/v/EAMetatrader)![PyPI - Downloads](https://img.shields.io/pypi/dm/EAMetatrader) \
 ![Python Version](https://img.shields.io/badge/Python%20Version-3-blue) \
 ![OS Support](https://img.shields.io/badge/OS%20Support-WIN--64-lightgrey) \
 ![GitHub](https://img.shields.io/github/license/EAScript/EAMT) \
@@ -16,8 +16,8 @@ This library currently only supports MetaTrader 4
 ### Required libraries
 ```Python
 from EAMetatrader import MT4Client
-from EnumObjects import *
-from using import Color
+from EAMetatrader.Enums import *
+from EAMetatrader.Using import Color
 import datetime
 ```
 
@@ -72,7 +72,7 @@ If you have a question or want to report a bug, send it in this section
 ## My social medias
 [LinkedIn](https://www.linkedin.com/in/ehsan-akbari-0487ba187)
 
-[Instagram](https://simpleicons.org/icons/instagram.svg)
+[Instagram](https://instagram.com/ea.forex.programmer)
 
 [YouTube](https://youtube.com/channel/UCCmSFoxq8NNlmGs9I3T5QLA)
 
