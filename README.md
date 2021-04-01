@@ -82,9 +82,10 @@ If you have a question or want to report a bug, send it in this section
 ## Donating
 [PyPal](https://www.paypal.me/eaforexprogrammer)
 
-Bitcoin: `1LsuAxGGdfH43YpgSjY8CSZdX45r4BE4jx`
+Bitcoin: `1E5ECG6xqttRQEafkbdxxpBWfsZd679qm6`
+</br><img src="http://eaforexrobot.com/Donate/assets/img/Bitcoin_qr.png" width="320" height="320">
 
-![QRCode](https://i.ibb.co/sQ4QqMk/My-Bit-Coin-Wallet.png)
+## [More Cryptocurrency For Donate ...!](http://eaforexrobot.com/Donate)
 
 
 
