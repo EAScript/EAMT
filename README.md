@@ -1,9 +1,9 @@
 # EAMT
-![PyPI](https://img.shields.io/pypi/v/EAMetatrader)![GitHub all releases](https://img.shields.io/github/downloads/EAScript/EAMT/total) \
+![PyPI](https://img.shields.io/pypi/v/EAMetatrader) \
 ![Python Version](https://img.shields.io/badge/Python%20Version-3-blue) \
 ![OS Support](https://img.shields.io/badge/OS%20Support-WIN--64-lightgrey) \
 ![GitHub](https://img.shields.io/github/license/EAScript/EAMT) \
-![GitHub followers](https://img.shields.io/github/followers/EAScript?style=social)![GitHub User's stars](https://img.shields.io/github/stars/EAScript?style=social)![GitHub watchers](https://img.shields.io/github/watchers/EAScript/EAMT?style=social)
+![GitHub followers](https://img.shields.io/github/followers/EAScript?style=social)![GitHub User's stars](https://img.shields.io/github/stars/EAScript?style=social)
 ## Metatrader library for python powered by MtApi
 This library currently only supports MetaTrader 4
 
