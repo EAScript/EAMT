@@ -80,7 +80,7 @@ If you have a question or want to report a bug, send it in this section
 [Github](https://github.com/EAScript)
 
 ## Donating
-[PyPal](https://www.paypal.me/eaforexprogrammer)
+[PayPal](https://www.paypal.me/eaforexprogrammer)
 
 Bitcoin: `1E5ECG6xqttRQEafkbdxxpBWfsZd679qm6`
 </br><img src="http://eaforexrobot.com/Donate/assets/img/Bitcoin_qr.png" width="320" height="320">
