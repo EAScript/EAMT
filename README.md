@@ -1,6 +1,6 @@
 # EAMT
 ![PyPI](https://img.shields.io/pypi/v/EAMetatrader) \
-![Python Version](https://img.shields.io/badge/Python%20Version-3-blue) \
+![Python Version](https://img.shields.io/badge/Python%20Version-3.7-blue) \
 ![OS Support](https://img.shields.io/badge/OS%20Support-WIN--64-lightgrey) \
 ![GitHub](https://img.shields.io/github/license/EAScript/EAMT) \
 ![GitHub followers](https://img.shields.io/github/followers/EAScript?style=social)![GitHub User's stars](https://img.shields.io/github/stars/EAScript?style=social)
