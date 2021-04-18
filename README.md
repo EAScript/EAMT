@@ -1,5 +1,5 @@
 # EAMT
-![PyPI](https://img.shields.io/pypi/v/EAMetatrader) \
+![PyPI](https://img.shields.io/pypi/v/EAMetatrader)![PyPI - Downloads](https://img.shields.io/pypi/dm/EAMetatrader) \
 ![Python Version](https://img.shields.io/badge/Python%20Version-3.7-blue) \
 ![OS Support](https://img.shields.io/badge/OS%20Support-WIN--64-lightgrey) \
 ![GitHub](https://img.shields.io/github/license/EAScript/EAMT) \
