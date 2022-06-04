@@ -50,7 +50,7 @@ RSI = client.iRSI(Symbol,Timeframe,Period,Appliedprice,Shift)
 ### Send Order
 ```Python
 Lot = 0.01
-Ask = self.mt4.MarketInfo("EURUSD",MarketInfoModeType.MODE_ASK)
+Ask = client.MarketInfo("EURUSD",MarketInfoModeType.MODE_ASK)
 SL = Ask - 0.002
 TP = Ask + 0.004
 Slippage = 5
