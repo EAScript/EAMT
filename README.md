@@ -50,16 +50,16 @@ RSI = client.iRSI(Symbol,Timeframe,Period,Appliedprice,Shift)
 ### Send Order
 ```Python
 Lot = 0.01
-ask = self.mt4.MarketInfo("EURUSD",MarketInfoModeType.MODE_ASK)
-SL = ask - 0.002
-TP = ask + 0.004
+Ask = self.mt4.MarketInfo("EURUSD",MarketInfoModeType.MODE_ASK)
+SL = Ask - 0.002
+TP = Ask + 0.004
 Slippage = 5
 Comment = "EAMetatrader"
 Magic = 2222
 Expiration = datetime.datetime(2021,3,25)
 color = Color()
 
-Order = client.OrderSend("EURUSD",TradeOperation.OP_BUY,Lot,ask,Slippage,SL,TP,Comment,Magic,Expiration,color.Green())
+Order = client.OrderSend("EURUSD",TradeOperation.OP_BUY,Lot,Ask,Slippage,SL,TP,Comment,Magic,Expiration,color.Green())
 ```
 
 ## TODO
