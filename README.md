@@ -75,16 +75,16 @@ If you have a question or want to report a bug, send it in this section
 
 [Instagram](https://instagram.com/ea.forex.programmer)
 
-[YouTube](https://youtube.com/channel/UCCmSFoxq8NNlmGs9I3T5QLA)
+[YouTube](https://www.youtube.com/channel/UCjoSfFPmcy7makwHFYuHM8Q)
 
 [Github](https://github.com/EAScript)
 
 ## Donating
 
-Bitcoin: `1E5ECG6xqttRQEafkbdxxpBWfsZd679qm6`
-</br><img src="http://eaforexrobot.com/Donate/assets/img/Bitcoin_qr.png" width="320" height="320">
+Bitcoin: `13fWKBESm6pqtCQzp3WgBarcmxFNv5aCXf`
+<!-- </br><img src="http://eaforexrobot.com/Donate/assets/img/Bitcoin_qr.png" width="320" height="320"> -->
 
-## [More Cryptocurrency For Donate ...!](http://eaforexrobot.com/Donate)
+<!-- ## [More Cryptocurrency For Donate ...!](http://eaforexrobot.com/Donate) -->
 
 
 
